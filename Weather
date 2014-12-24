@@ -1,0 +1,42 @@
+use_xft yes
+xftfont 123:size=8
+xftalpha 0.1
+
+update_interval 120
+update_interval_on_battery 6000
+
+own_window yes
+own_window_type normal
+own_window_transparent yes
+own_window_hints undecorated,below,sticky,skip_taskbar,skip_pager
+
+alignment top_right
+
+draw_shades no
+pad_percents 0
+border_inner_margin 0
+border_outer_margin 0
+
+gap_x 10
+gap_y 10
+
+#minimum_size 200 200
+
+color1 FFFFFF
+
+TEXT
+# Temperature
+${exec curl -s "http://export.yandex.ru/weather-ng/forecasts/28807.xml" -o ~/.cache/yandexweather.xml}\
+${font Ubuntu:pixelsize=60}${color1}\
+${exec grep "<temperature"  ~/.cache/yandexweather.xml | awk 'NR==1' | grep -o ">[^<]*<" | grep -o "[^<>]*"}°C
+# City/Town
+${voffset -40}${font Ubuntu:pixelsize=20}${color1}\
+${exec grep "<forecast "  ~/.cache/yandexweather.xml | awk 'NR==1' | grep -o "exactname=\"[^\"]*\"" | grep -o "\"[^\"]*\"" | grep -o "[^\"]*"}
+# Details
+${voffset 35}${font Ubuntu:pixelsize=15}${color1}\
+${exec grep "<weather_type>"  ~/.cache/yandexweather.xml | awk 'NR==1' | grep -o ">[^<]*<" | grep -o "[^<>]*" | sed s/\\s/\\n/}
+# Image
+${exec curl -s http://yastatic.net/weather/i/icons/30x30/$(grep "<image-v3 "  ~/.cache/yandexweather.xml | awk 'NR==1' | grep -o ">[^<]*<" | grep -o "[^<>]*").png -o ~/.cache/yandexweather.png}\
+${image ~/.cache/yandexweather.png -p 20,90}
+
+
