@@ -36,7 +36,7 @@ ${voffset -40}${font Ubuntu:pixelsize=20}${color1}\
 ${exec grep "<forecast "  ~/.cache/yandexweather.xml | awk 'NR==1' | grep -o "exactname=\"[^\"]*\"" | grep -o "\"[^\"]*\"" | grep -o "[^\"]*"}
 # Details
 ${voffset 35}${font Ubuntu:pixelsize=15}${color1}\
-${exec grep "<weather_type>"  ~/.cache/yandexweather.xml | awk 'NR==1' | grep -o ">[^<]*<" | grep -o "[^<>]*" | sed s/\\s/\\n/}
+${exec grep "<weather_type>"  ~/.cache/yandexweather.xml | awk 'NR==1' | grep -o ">[^<]*<" | grep -o "[^<>]*" | sed s/\\s/\\n/ | sed s/,\\s/,\\n/}
 # Image
 ${exec curl -s http://yastatic.net/weather/i/icons/30x30/$(grep "<image-v3 "  ~/.cache/yandexweather.xml | awk 'NR==1' | grep -o ">[^<]*<" | grep -o "[^<>]*").png -o ~/.cache/yandexweather.png}\
 ${image ~/.cache/yandexweather.png -p 20,90}
